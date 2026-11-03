@@ -14,6 +14,13 @@ const urutan = fields.integer({
 });
 
 /**
+ * Cara termudah untuk admin online: Keystatic Cloud (gratis sampai 3 pengguna).
+ * Setelah membuat project di https://keystatic.cloud, isi dengan 'nama-team/nama-project'.
+ * Selama kosong, admin memakai mode lokal / GitHub App seperti di bawah.
+ */
+const KEYSTATIC_CLOUD_PROJECT = '';
+
+/**
  * Di komputer sendiri (npm run dev) admin langsung mengedit file lokal.
  * Di situs online, admin mengedit lewat GitHub.
  * Saat setup awal GitHub App (lihat README), tambahkan PUBLIC_KEYSTATIC_GITHUB=true di file .env.
@@ -21,9 +28,12 @@ const urutan = fields.integer({
 const pakaiGithub = import.meta.env.PROD || import.meta.env.PUBLIC_KEYSTATIC_GITHUB === 'true';
 
 export default config({
-  storage: pakaiGithub
-    ? { kind: 'github', repo: GITHUB_REPO as `${string}/${string}` }
-    : { kind: 'local' },
+  storage: KEYSTATIC_CLOUD_PROJECT
+    ? { kind: 'cloud' }
+    : pakaiGithub
+      ? { kind: 'github', repo: GITHUB_REPO as `${string}/${string}` }
+      : { kind: 'local' },
+  ...(KEYSTATIC_CLOUD_PROJECT ? { cloud: { project: KEYSTATIC_CLOUD_PROJECT } } : {}),
 
   ui: {
     brand: { name: 'Portofolio Luthfan' },

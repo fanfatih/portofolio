@@ -56,25 +56,17 @@ git push -u origin main
 
 Setiap kali ada commit baru di GitHub, Vercel build ulang otomatis (sekitar 1 menit).
 
-## 4. Aktifkan panel admin online
+## 4. Aktifkan panel admin online (Keystatic Cloud, gratis)
 
-Panel admin online login lewat GitHub dan menyimpan perubahan sebagai commit. Hanya akun yang punya akses tulis ke repo yang bisa masuk. Setup sekali saja:
+Cara paling mudah. Tidak perlu setup lokal dan tidak ada variabel rahasia. Gratis sampai 3 pengguna per team.
 
-1. Di komputer, buat file `.env` di folder project, isi satu baris:
-   ```
-   PUBLIC_KEYSTATIC_GITHUB=true
-   ```
-2. Jalankan `npm run dev`, buka http://localhost:4321/keystatic.
-3. Ikuti layar yang muncul: login GitHub → **Create GitHub App** (nama bebas, kolom URL boleh diisi alamat situsmu, misalnya `https://luthfanfatih.my.id`) → beri akses ke repo `portofolio`.
-4. Setelah selesai, Keystatic menulis empat variabel ke file `.env`:
-   `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET`, `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`.
-5. Salin keempatnya ke Vercel: **Project → Settings → Environment Variables**, lalu **Redeploy**.
-6. Hapus baris `PUBLIC_KEYSTATIC_GITHUB=true` dari `.env` supaya `npm run dev` kembali mengedit file lokal.
-7. Buka `https://alamat-situsmu/keystatic`, login dengan GitHub.
+1. Buka https://keystatic.cloud dan daftar dengan akun GitHub.
+2. Buat **Team** (nama bebas), lalu **Create project** dan hubungkan ke repo `portofolio`. Setujui aplikasi GitHub Keystatic kalau diminta.
+3. Di halaman project, salin nama project dalam bentuk `nama-team/nama-project`.
+4. Buka `keystatic.config.ts`, isi `KEYSTATIC_CLOUD_PROJECT` dengan nama itu, lalu commit dan push (boleh langsung lewat editor web GitHub).
+5. Tunggu Vercel selesai deploy, buka `https://alamat-situsmu/keystatic`, dan login.
 
-Kalau saat login muncul error `redirect_uri`, buka pengaturan GitHub App-nya (`https://github.com/settings/apps/NAMA-APP`), klik **Add Callback URL**, lalu isi alamat yang tertulis di pesan error. Biasanya bentuknya `https://luthfanfatih.my.id/api/keystatic/github/oauth/callback`. Tambahkan juga versi `xxx.vercel.app` kalau kamu pakai itu.
-
-File `.env` jangan pernah di-commit (sudah ada di `.gitignore`).
+Cara alternatif tanpa layanan pihak ketiga (GitHub App buatan sendiri) ada di dokumentasi Keystatic: https://keystatic.com/docs/github-mode
 
 ## 5. Pasang domain luthfanfatih.my.id
 
