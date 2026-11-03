@@ -18,7 +18,7 @@ const urutan = fields.integer({
  * Setelah membuat project di https://keystatic.cloud, isi dengan 'nama-team/nama-project'.
  * Selama kosong, admin memakai mode lokal / GitHub App seperti di bawah.
  */
-const KEYSTATIC_CLOUD_PROJECT = '';
+const KEYSTATIC_CLOUD_PROJECT = 'fanfatih/portofolio';
 
 /**
  * Di komputer sendiri (npm run dev) admin langsung mengedit file lokal.
