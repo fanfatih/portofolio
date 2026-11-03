@@ -1,0 +1,168 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getProfil, getPengalaman, getSertifikasi, getProjek, paragraphs, waLink } from '../lib/data';
+
+const profil = await getProfil();
+const pengalaman = await getPengalaman();
+const sertifikasi = await getSertifikasi();
+const semuaProjek = await getProjek();
+const unggulan = semuaProjek.filter((p) => p.unggulan).slice(0, 6);
+const wa = waLink(profil.whatsapp);
+---
+
+<Base>
+  <section class="hero" id="atas">
+    <div class="hero-main">
+      {
+        profil.statistik.length > 0 && (
+          <div class="stats in">
+            {profil.statistik.map((s) => (
+              <div class="stat">
+                <span class="stat-num">{s.angka}</span>
+                <span class="stat-label">{s.keterangan}</span>
+              </div>
+            ))}
+          </div>
+        )
+      }
+      <h1 class="hello in2">{profil.sapaan}</h1>
+      <div class="hero-text in3">
+        <p class="lead">{profil.headline}</p>
+        <div class="actions">
+          <a class="btn btn-accent" href="#projek">Lihat projek ↓</a>
+          <a class="btn btn-ghost" href="#kontak">Ajak kerja bareng</a>
+        </div>
+      </div>
+    </div>
+    <div class:list={['portrait in2', { bw: profil.fotoHitamPutih }]}>
+      {
+        profil.foto ? (
+          <img src={profil.foto} alt={`Foto ${profil.nama}`} width="920" height="1150" fetchpriority="high" />
+        ) : (
+          <span class="placeholder">[ Foto belum diisi. Upload lewat panel admin: Profil &amp; kontak ]</span>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="about" id="tentang">
+    <div class="about-text" data-reveal>
+      <span class="eyebrow"><span class="dot"></span>Tentang</span>
+      <h2 class="h2">{profil.tentangJudul}</h2>
+      <div class="body">
+        {paragraphs(profil.tentang).map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+    {
+      profil.keahlian.length > 0 && (
+        <div class="skills" data-reveal>
+          <dl>
+            {profil.keahlian.map((k) => (
+              <div class="skill">
+                <dt>{k.judul}</dt>
+                <dd>{k.isi}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      )
+    }
+  </section>
+
+  {
+    pengalaman.length > 0 && (
+      <section class="section" id="pengalaman">
+        <div class="section-head" data-reveal>
+          <div>
+            <span class="eyebrow">
+              <span class="dot" />
+              Pengalaman
+            </span>
+            <h2 class="h2">Tempat aku belajar dan mengajar.</h2>
+          </div>
+          <p class="section-note">Kerja di media sosial kampus, lalu mengajar di pusat pelatihan kerja Kota Bogor.</p>
+        </div>
+        <ul class="exp" data-reveal>
+          {pengalaman.map((e) => (
+            <li class="exp-row">
+              <div class="exp-who">
+                <span class="exp-name">{e.instansi}</span>
+                <span class="mono">
+                  {e.mulai}
+                  {e.selesai && e.selesai !== e.mulai ? ` — ${e.selesai}` : ''}
+                  {e.kota ? ` · ${e.kota}` : ''}
+                </span>
+              </div>
+              <span class="exp-role">{e.peran}</span>
+              <ul class="tags">
+                {e.tag.map((t) => (
+                  <li class="tag">{t}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    sertifikasi.length > 0 && (
+      <section class="section" id="sertifikasi">
+        <div class="section-head" data-reveal>
+          <div>
+            <span class="eyebrow">
+              <span class="dot" />
+              Sertifikasi
+            </span>
+            <h2 class="h2">Diuji dan bersertifikat.</h2>
+          </div>
+        </div>
+        <ul class="certs" data-reveal>
+          {sertifikasi.map((c) => (
+            <li class="cert">
+              <span class="mono">
+                {c.penerbit}
+                {c.tahun ? ` · ${c.tahun}` : ''}
+              </span>
+              <span class="cert-title">{c.judul}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="section section--alt" id="projek">
+    <div class="section-head" data-reveal>
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Projek</span>
+        <h2 class="h2">Karya terbaru.</h2>
+      </div>
+      <a class="pill" href="/projek">Lihat semua projek →</a>
+    </div>
+    {
+      unggulan.length > 0 ? (
+        <div class="grid">
+          {unggulan.map((p, i) => (
+            <ProjectCard slug={p.slug} judul={p.judul} kategori={p.kategori} ringkasan={p.ringkasan} cover={p.cover} index={i} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">Projek akan segera ditambahkan.</p>
+      )
+    }
+  </section>
+
+  <div class="cta-wrap">
+    <div class="cta" data-reveal>
+      <span class="eyebrow"><span class="dot"></span>Kerja bareng</span>
+      <h2>{profil.ctaJudul}</h2>
+      <div class="actions">
+        {wa && <a class="btn btn-accent" href={wa} rel="noopener">Chat via WhatsApp ↗</a>}
+        {profil.email && <a class="btn btn-ghost" href={`mailto:${profil.email}`}>Kirim email</a>}
+      </div>
+    </div>
+  </div>
+</Base>

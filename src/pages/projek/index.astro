@@ -1,0 +1,62 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjek } from '../../lib/data';
+
+const projek = await getProjek();
+const kategori = [...new Set(projek.map((p) => p.kategori))];
+---
+
+<Base title="Projek" description="Kumpulan projek social media, konten video, dan desain grafis karya Luthfan Fatih.">
+  <section class="section" style="border-top: 0; padding-top: 32px;">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow"><span class="dot"></span>Projek</span>
+        <h1 class="h2">Semua projek.</h1>
+      </div>
+      {
+        kategori.length > 1 && (
+          <div class="chips" role="group" aria-label="Filter kategori" id="chips">
+            <button class="chip" type="button" data-filter="semua" aria-pressed="true">Semua</button>
+            {kategori.map((k) => (
+              <button class="chip" type="button" data-filter={k} aria-pressed="false">
+                {k}
+              </button>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    {
+      projek.length > 0 ? (
+        <div class="grid" id="daftar">
+          {projek.map((p, i) => (
+            <ProjectCard slug={p.slug} judul={p.judul} kategori={p.kategori} ringkasan={p.ringkasan} cover={p.cover} index={i} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">Belum ada projek yang ditampilkan.</p>
+      )
+    }
+  </section>
+
+  <script is:inline>
+    (function () {
+      var chips = document.getElementById('chips');
+      var list = document.getElementById('daftar');
+      if (!chips || !list) return;
+      chips.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-filter]');
+        if (!btn) return;
+        var f = btn.getAttribute('data-filter');
+        chips.querySelectorAll('button').forEach(function (b) {
+          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        list.querySelectorAll('.card').forEach(function (c) {
+          c.hidden = !(f === 'semua' || c.getAttribute('data-kategori') === f);
+        });
+      });
+    })();
+  </script>
+</Base>

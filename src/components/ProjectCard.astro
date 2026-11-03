@@ -1,0 +1,30 @@
+---
+interface Props {
+  slug: string;
+  judul: string;
+  kategori: string;
+  ringkasan?: string | null;
+  cover?: string | null;
+  index?: number;
+}
+
+const { slug, judul, kategori, ringkasan, cover, index = 0 } = Astro.props;
+const tone = (index % 3) + 1;
+---
+
+<a class="card" href={`/projek/${slug}`} data-kategori={kategori} data-reveal>
+  <div class="thumb" data-tone={tone}>
+    {
+      cover ? (
+        <img src={cover} alt={`Sampul projek ${judul}`} loading="lazy" decoding="async" />
+      ) : (
+        <span class="placeholder">[ Gambar sampul belum diisi ]</span>
+      )
+    }
+  </div>
+  <div class="card-body">
+    <span class="eyebrow">{kategori}</span>
+    <h3 class="card-title">{judul}</h3>
+    {ringkasan && <p class="card-sum">{ringkasan}</p>}
+  </div>
+</a>

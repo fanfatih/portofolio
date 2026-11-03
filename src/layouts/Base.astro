@@ -1,0 +1,123 @@
+---
+import '@fontsource-variable/hanken-grotesk';
+import '@fontsource/dm-mono/400.css';
+import '@fontsource/dm-mono/500.css';
+import '../styles/global.css';
+import { getProfil, waLink } from '../lib/data';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string | null;
+}
+
+const profil = await getProfil();
+const { title, description, image } = Astro.props;
+
+const pageTitle = title ? `${title} · ${profil.nama}` : profil.seoJudul || profil.nama;
+const pageDesc = description || profil.seoDeskripsi;
+const site = Astro.site ?? new URL('https://luthfanfatih.my.id');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = new URL(image || '/og.png', site).href;
+const path = Astro.url.pathname;
+const wa = waLink(profil.whatsapp);
+
+const sameAs = [profil.linkedin, profil.instagram].filter(Boolean);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profil.nama,
+  url: site.href,
+  jobTitle: 'Social Media Specialist',
+  address: { '@type': 'PostalAddress', addressLocality: profil.kota, addressCountry: 'ID' },
+  sameAs,
+};
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#f2f1ed" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content={profil.nama} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Lewati ke konten</a>
+
+    <header class="site-header">
+      <a class="brand" href="/">LF — Luthfan Fatih</a>
+      <nav class="nav" aria-label="Navigasi utama">
+        <a href="/#tentang">Tentang</a>
+        <a href="/#pengalaman">Pengalaman</a>
+        <a href="/projek" aria-current={path.startsWith('/projek') ? 'page' : undefined}>Projek</a>
+        <a class="pill" href="/#kontak">Hubungi aku ↗</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="footer" id="kontak">
+      {profil.email && <a class="footer-mail" href={`mailto:${profil.email}`}>{profil.email}</a>}
+      <div class="footer-bar">
+        <nav class="footer-nav" aria-label="Navigasi footer">
+          <a href="/">Beranda</a>
+          <a href="/#tentang">Tentang</a>
+          <a href="/#pengalaman">Pengalaman</a>
+          <a href="/projek">Projek</a>
+          {wa && <a href={wa} rel="noopener">WhatsApp ↗</a>}
+          {profil.linkedin && <a href={profil.linkedin} rel="noopener">LinkedIn ↗</a>}
+          {profil.instagram && <a href={profil.instagram} rel="noopener">Instagram ↗</a>}
+          {profil.cv && <a href={profil.cv}>Unduh CV</a>}
+        </nav>
+        <span class="copy">© {new Date().getFullYear()} {profil.nama} · {profil.kota}</span>
+      </div>
+    </footer>
+
+    <script is:inline>
+      (function () {
+        var els = document.querySelectorAll('[data-reveal]');
+        if (!els.length) return;
+        if (!('IntersectionObserver' in window)) {
+          els.forEach(function (el) { el.classList.add('is-in'); });
+          return;
+        }
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (e) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
+        );
+        els.forEach(function (el) { io.observe(el); });
+      })();
+    </script>
+  </body>
+</html>

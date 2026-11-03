@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getProjek, paragraphs } from '../../lib/data';
+
+export async function getStaticPaths() {
+  const list = await getProjek();
+  return list.map((projek, i) => ({
+    params: { slug: projek.slug },
+    props: { projek, prev: list[i - 1] ?? null, next: list[i + 1] ?? null },
+  }));
+}
+
+const { projek, prev, next } = Astro.props;
+
+const bagian = [
+  { judul: 'Masalah', isi: projek.masalah },
+  { judul: 'Proses', isi: projek.proses },
+  { judul: 'Hasil', isi: projek.hasil },
+].filter((b) => paragraphs(b.isi).length > 0);
+
+const meta = [
+  { k: 'Kategori', v: projek.kategori },
+  { k: 'Tahun', v: projek.tahun },
+  { k: 'Klien', v: projek.klien },
+  { k: 'Peran', v: projek.peran },
+].filter((m) => m.v);
+---
+
+<Base title={projek.judul} description={projek.ringkasan || undefined} image={projek.cover}>
+  <article>
+    <header class="case-head">
+      <a class="crumb" href="/projek">← Semua projek</a>
+      <span class="eyebrow"><span class="dot"></span>{projek.kategori}</span>
+      <h1 class="case-title">{projek.judul}</h1>
+      {projek.ringkasan && <p class="case-lead">{projek.ringkasan}</p>}
+      {
+        meta.length > 0 && (
+          <dl class="meta">
+            {meta.map((m) => (
+              <div>
+                <dt>{m.k}</dt>
+                <dd>{m.v}</dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </header>
+
+    {
+      projek.cover && (
+        <figure class="case-cover">
+          <img src={projek.cover} alt={`Sampul projek ${projek.judul}`} fetchpriority="high" />
+        </figure>
+      )
+    }
+
+    {
+      bagian.length > 0 && (
+        <div class="case-body">
+          {bagian.map((b) => (
+            <section class="case-row">
+              <h2>{b.judul}</h2>
+              <div class="prose">
+                {paragraphs(b.isi).map((p) => (
+                  <p>{p}</p>
+                ))}
+              </div>
+            </section>
+          ))}
+          {projek.tautan && (
+            <div class="case-row">
+              <h2>Tautan</h2>
+              <div class="prose">
+                <p>
+                  <a class="btn btn-accent" href={projek.tautan} rel="noopener" target="_blank">
+                    {projek.teksTautan || 'Lihat hasilnya'} ↗
+                  </a>
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )
+    }
+
+    {
+      projek.galeri.length > 0 && (
+        <div class="gallery">
+          {projek.galeri
+            .filter((g) => g.gambar)
+            .map((g) => (
+              <figure>
+                <img src={g.gambar} alt={g.keterangan || `Galeri projek ${projek.judul}`} loading="lazy" decoding="async" />
+                {g.keterangan && <figcaption>{g.keterangan}</figcaption>}
+              </figure>
+            ))}
+        </div>
+      )
+    }
+
+    <nav class="case-nav" aria-label="Projek lain">
+      {
+        prev && (
+          <a href={`/projek/${prev.slug}`}>
+            <span class="mono">← Sebelumnya</span>
+            <span class="t">{prev.judul}</span>
+          </a>
+        )
+      }
+      {
+        next && (
+          <a class="next" href={`/projek/${next.slug}`}>
+            <span class="mono">Berikutnya →</span>
+            <span class="t">{next.judul}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>
