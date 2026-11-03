@@ -514,8 +514,10 @@ p {
 }
 
 /* Filter chips */
-.chips {
+.chips,
+.section-head > .chips {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -806,6 +808,52 @@ p {
 .js [data-reveal].is-in {
   opacity: 1;
   transform: none;
+}
+
+/* ---------- Layar HP ---------- */
+@media (max-width: 640px) {
+  .site-header {
+    padding-top: 12px;
+    padding-bottom: 4px;
+  }
+  .nav {
+    gap: 0 22px;
+  }
+  /* Tombol kontak di header disembunyikan di HP: sudah ada di beranda dan footer */
+  .nav .nav-cta {
+    display: none;
+  }
+  .hero {
+    padding-bottom: 64px;
+  }
+  .hero-main {
+    gap: 32px;
+  }
+  .about,
+  .section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  .section {
+    gap: 40px;
+  }
+  .cta-wrap {
+    padding-top: 64px;
+    padding-bottom: 56px;
+  }
+  .section-head {
+    align-items: flex-start;
+  }
+  .section-head .chips {
+    flex: 1 1 100%;
+  }
+  .chip {
+    min-height: 40px;
+    padding: 0 16px;
+  }
+  .card-title {
+    font-size: 20px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
