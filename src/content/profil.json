@@ -1,14 +1,22 @@
 {
-  "sapaan": "Halo",
+  "sapaan": "Halo!",
   "nama": "Luthfan Fatih Al-Islamy",
   "headline": "Aku Luthfan Fatih. Social media specialist, content creator, dan desainer grafis di Bogor.",
-  "foto": null,
   "fotoHitamPutih": true,
   "kota": "Bogor",
   "statistik": [
-    { "angka": "4+", "keterangan": "tahun kelola media sosial kampus" },
-    { "angka": "4", "keterangan": "sertifikasi BNSP" },
-    { "angka": "3", "keterangan": "peran instruktur pelatihan kerja" }
+    {
+      "angka": "4+",
+      "keterangan": "tahun kelola media sosial kampus"
+    },
+    {
+      "angka": "4",
+      "keterangan": "sertifikasi BNSP"
+    },
+    {
+      "angka": "3",
+      "keterangan": "peran instruktur pelatihan kerja"
+    }
   ],
   "tentangJudul": "Dari ruang editing sampai strategi media sosial.",
   "tentang": "Lulusan Informatika STIKOM El Rahma Bogor yang berfokus di multimedia dan pemasaran digital. Sehari-hari aku mengelola media sosial STIKOM El Rahma: strategi, desain, copywriting, video, sampai iklan Meta.\n\nDi luar itu aku mengajar desain grafis, digital marketing, dan Microsoft Office di BLK UPTD dan Disnaker Kota Bogor. Sekarang aku juga sedang menempuh S2 Teknik Informatika.",
@@ -30,8 +38,6 @@
   "email": "luthfanfatih06@gmail.com",
   "whatsapp": "6285892928162",
   "linkedin": "https://www.linkedin.com/in/luthfanfatih/",
-  "instagram": null,
-  "cv": null,
   "seoJudul": "Luthfan Fatih — Social Media Specialist & Content Creator",
   "seoDeskripsi": "Portofolio Luthfan Fatih Al-Islamy: social media specialist, content creator, dan desainer grafis di Bogor. Strategi media sosial, konten video, dan desain."
 }
